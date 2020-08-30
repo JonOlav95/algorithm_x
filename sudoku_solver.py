@@ -2,7 +2,7 @@ from node import *
 from node_matrix import NodeMatrix
 
 """
-Sudoku solving algorithm which uses Knuth's Algorithm X
+Sudoku solver using Knuth's Algorithm X
 """
 
 
@@ -25,6 +25,7 @@ class SudokuSolver:
             self._initial_state(sudoku_raw)
             self._solve()
 
+    # Sets the initial state of the sudoku board (the given numbers)
     def _initial_state(self, sudoku_raw):
 
         raw_rows = len(sudoku_raw)
@@ -59,6 +60,7 @@ class SudokuSolver:
 
             counter += self._size
 
+    # Cover up a row and all connected rows and columns
     def _cover(self, node):
         column_node = self._link_matrix[0][node.x]
 
@@ -84,6 +86,7 @@ class SudokuSolver:
 
             row_node = row_node.down
 
+    # Uncover a row and all connected rows and columns
     def _uncover(self, node):
         column_node = self._link_matrix[0][node.x]
 
@@ -109,6 +112,7 @@ class SudokuSolver:
         column_node.left.right = column_node
         column_node.right.left = column_node
 
+    # Finds the column with the least amount of nodes connected to it
     def _find_minimum(self):
         node = self._header.right
 
@@ -125,19 +129,28 @@ class SudokuSolver:
 
         return minimum_node
 
+    # The recursive main method used to solve sudoku
     def _solve(self):
 
+        # If the linked list is empty, a solution has been found
         if self._header.right == self._header:
             print("A solution has been found")
 
             self._print_solution()
             return
 
+        # Find the column with the least amount of nodes
         column_node = self._find_minimum()
 
         self._cover(column_node)
 
         row_node = column_node.down
+
+        '''
+        The loop browses down the column with the least amount of nodes and 
+        adds the first row to the solution array. If the row does not fit it 
+        is removed from the solution array, and the next row is added.
+        '''
         while row_node != column_node:
 
             self._solution.append(row_node.y)
