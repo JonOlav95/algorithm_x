@@ -1,10 +1,6 @@
 from node import *
 from node_matrix import NodeMatrix
 
-"""
-Sudoku solver using Knuth's Algorithm X
-"""
-
 
 class SudokuSolver:
 

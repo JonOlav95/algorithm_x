@@ -2,6 +2,19 @@ import time
 from matrix_constructor import construct_sudoku
 from sudoku_solver import SudokuSolver
 
+
+"""
+Sudoku solver using Knuth's Algorithm X
+
+Useful sources: 
+https://en.wikipedia.org/wiki/Exact_cover
+https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X
+https://www.geeksforgeeks.org/exact-cover-problem-algorithm-x-set-2-implementation-dlx/
+https://medium.com/javarevisited/building-a-sudoku-solver-in-java-with-dancing-links-180274b0b6c1
+https://www.kevinhooke.com/2019/01/22/revisiting-donald-knuths-algorithm-x-and-dancing-links-to-solve-sudoku-puzzles/
+"""
+
+
 if __name__ == '__main__':
 
     sudoku_small = [[3, 4, 1, 0],
