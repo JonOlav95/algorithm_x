@@ -1,5 +1,5 @@
 import time
-from matrix_constructor import construct_sudoku
+from matrix_constructor import construct_sudoku, read_xls
 from sudoku_solver import SudokuSolver
 
 
@@ -25,6 +25,11 @@ if __name__ == '__main__':
     sudoku_small_2 = [[0, 0, 0, 0],
                       [1, 0, 2, 0],
                       [0, 4, 0, 3],
+                      [0, 0, 0, 0]]
+
+    sudoku_small_3 = [[0, 0, 0, 0],
+                      [0, 0, 0, 0],
+                      [0, 0, 0, 0],
                       [0, 0, 0, 0]]
 
     sudoku_medium = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -57,6 +62,26 @@ if __name__ == '__main__':
                        [0, 0, 2, 0, 1, 0, 0, 0, 0],
                        [0, 0, 0, 0, 4, 0, 0, 0, 9]]
 
+    sudoku_medium_chess = [[0, 0, 0, 1, 0, 0, 4, 0, 0],
+                           [6, 0, 0, 0, 3, 5, 0, 0, 0],
+                           [0, 0, 0, 0, 2, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0, 5],
+                           [0, 4, 0, 9, 0, 0, 2, 3, 0],
+                           [0, 0, 0, 0, 5, 0, 0, 0, 1],
+                           [0, 0, 0, 0, 6, 1, 0, 0, 7],
+                           [0, 0, 1, 0, 0, 0, 0, 0, 0],
+                           [0, 2, 0, 0, 0, 0, 0, 0, 9]]
+
+    sudoku_medium_chess_2 =   [[0, 0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 7, 9, 0, 0],
+                               [0, 9, 0, 0, 3, 4, 0, 0, 0],
+                               [0, 6, 0, 7, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                               [0, 0, 0, 5, 0, 0, 0, 0, 0],
+                               [0, 0, 2, 0, 0, 0, 0, 0, 0],
+                               [3, 5, 0, 0, 0, 0, 0, 8, 0],
+                               [0, 0, 0, 0, 0, 0, 0, 4, 6]]
+
     sudoku_large = [[8, 0, 9, 0, 10, 0, 0, 12, 16, 0, 15, 0, 0, 0, 0, 4],
                     [0, 0, 15, 0, 0, 0, 5, 0, 0, 7, 0, 10, 0, 0, 13, 0],
                     [2, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 16, 0, 14],
@@ -75,8 +100,12 @@ if __name__ == '__main__':
                     [15, 0, 1, 0, 0, 0, 0, 2, 0, 0, 0, 5, 0, 0, 0, 12]]
 
     board = construct_sudoku(size=9)
+    #board = read_xls()
     start = time.time()
-    s = SudokuSolver(board, sudoku_medium_2)
+
+#    read_xls()
+    s = SudokuSolver(board, sudoku_medium_chess)
+
 
     end = time.time()
     t_time = round(((end - start) * 1000), 2)

@@ -14,7 +14,7 @@ class NodeMatrix:
 
     ''' Current implementation of the matrix creates all the nodes then connects them
         A better solution could be to simultaneously create and connect the nodes'''
-    # TODO: This function requires rework as it complexity is too high
+    # TODO: This function requires rework as its complexity is too high
     def construct_matrix(self):
 
         header = HeaderNode()

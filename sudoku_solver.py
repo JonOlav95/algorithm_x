@@ -19,6 +19,17 @@ class SudokuSolver:
             self._header, self._link_matrix = node_matrix.construct_matrix()
 
             self._initial_state(sudoku_raw)
+
+            '''
+            tmp_node = self._header.right
+
+            while tmp_node != self._header:
+                if tmp_node.node_amount == 0:
+                    print(str(tmp_node.x))
+
+                tmp_node = tmp_node.right
+            '''
+
             self._solve()
 
     # Sets the initial state of the sudoku board (the given numbers)
@@ -56,10 +67,58 @@ class SudokuSolver:
 
             counter += self._size
 
+    def _king_cover(self, c_node):
+
+        x = c_node.x
+
+        while True:
+
+            if x % 9 != 0:
+                x -= 1
+            else:
+                break
+
+        first_pos = x
+        itr_node = self._link_matrix[0][first_pos]
+
+        covered_amount = 0
+
+        for i in range(9):
+            if itr_node.covered:
+                covered_amount += 1
+
+            itr_node = self._link_matrix[0][first_pos + i + 1]
+
+        if covered_amount < 2:
+            return
+
+        itr_node = self._link_matrix[0][first_pos]
+        for i in range(9):
+            if itr_node.covered:
+                itr_node = self._link_matrix[0][first_pos + i + 1]
+                continue
+
+            itr_node.left.right = itr_node.right
+            itr_node.right.left = itr_node.left
+
+            down_node = itr_node.down
+
+            while down_node != itr_node:
+                down_node.left.right = down_node.right
+                down_node.right.left = down_node.left
+
+                down_node = down_node.down
+
+            itr_node = self._link_matrix[0][first_pos + i + 1]
+
+
+
     # Cover up a row and all connected rows and columns
     def _cover(self, node):
+
         column_node = self._link_matrix[0][node.x]
 
+        column_node.covered = True
         column_node.left.right = column_node.right
         column_node.right.left = column_node.left
 
@@ -73,14 +132,60 @@ class SudokuSolver:
                 right_node.up.down = right_node.down
                 right_node.down.up = right_node.up
 
-                self._link_matrix[0][right_node.x].node_amount -= 1
-
-                if self._link_matrix[0][right_node.x].node_amount < 0:
-                    print("Too little")
+                deduct_node = self._link_matrix[0][right_node.x]
+                deduct_node.node_amount -= 1
 
                 right_node = right_node.right
 
             row_node = row_node.down
+
+        if node.x >= 324:
+            self._king_cover(column_node)
+
+
+    def _uncover_king(self, c_node):
+        x = c_node.x
+
+        while True:
+
+            if x % 9 != 0:
+                x -= 1
+            else:
+                break
+
+        first_pos = x
+        itr_node = self._link_matrix[0][first_pos]
+
+        covered_amount = 0
+
+        for i in range(9):
+            if itr_node.covered:
+                covered_amount += 1
+
+            itr_node = self._link_matrix[0][first_pos + i + 1]
+
+        if covered_amount < 2:
+            return
+
+        itr_node = self._link_matrix[0][first_pos]
+        for i in range(9):
+            if itr_node.covered or itr_node == c_node:
+                itr_node = self._link_matrix[0][first_pos + i + 1]
+                continue
+
+            itr_node.left.right = itr_node
+            itr_node.right.left = itr_node
+
+            down_node = itr_node.down
+
+            while down_node != itr_node:
+                down_node.left.right = down_node
+                down_node.right.left = down_node
+
+                down_node = down_node.down
+
+            itr_node = self._link_matrix[0][first_pos + i]
+
 
     # Uncover a row and all connected rows and columns
     def _uncover(self, node):
@@ -98,13 +203,17 @@ class SudokuSolver:
 
                 self._link_matrix[0][left_node.x].node_amount += 1
 
-                if self._link_matrix[0][left_node.x].node_amount < 0:
+                if self._link_matrix[0][left_node.x].node_amount == 0:
                     print("Too much")
 
                 left_node = left_node.left
 
             row_node = row_node.up
 
+        if node.x >= 324:
+            self._uncover_king(column_node)
+
+        column_node.covered = False
         column_node.left.right = column_node
         column_node.right.left = column_node
 
@@ -120,6 +229,9 @@ class SudokuSolver:
             if node.node_amount < minimum:
                 minimum_node = node
                 minimum = node.node_amount
+
+                if node.node_amount == 0:
+                    print("minimum is 0")
 
             node = node.right
 

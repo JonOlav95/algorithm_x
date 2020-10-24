@@ -8,6 +8,7 @@ class Node:
         self.right = None
         self.x = -1
         self.y = -1
+        self.covered = False
 
 
 class ColumnNode(Node):
