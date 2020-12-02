@@ -1,4 +1,6 @@
 import time
+
+from backtrack import Backtrack
 from matrix_constructor import construct_sudoku, read_xls
 from sudoku_solver import SudokuSolver
 
@@ -103,9 +105,9 @@ if __name__ == '__main__':
     #board = read_xls()
     start = time.time()
 
-#    read_xls()
-    s = SudokuSolver(board, sudoku_medium_chess)
-
+    #s = SudokuSolver(board, sudoku_medium_chess)
+    backtrack = Backtrack(sudoku_medium)
+    solved = backtrack.b_track()
 
     end = time.time()
     t_time = round(((end - start) * 1000), 2)
