@@ -1,3 +1,6 @@
+from constraint import *
+
+
 class Node:
 
     def __init__(self):
@@ -10,10 +13,14 @@ class Node:
 class Backtrack:
 
     def __init__(self, board):
+
         self.board = board
         self.initial_board = board
         self.node_matrix = [[Node() for i in range(len(board))] for j in range(len(board[0]))]
         self.create_board(self.initial_board)
+
+        self.knight = False
+        self.king = False
 
     def create_board(self, board):
         for i in range(len(board)):
@@ -88,63 +95,28 @@ class Backtrack:
 
     def constraint(self, x, y, val):
 
-        node = self.node_matrix[y][x]
+        arr = []
+        for i in range(len(self.node_matrix)):
 
-        for i in range(9):
+            line = []
+            for j in range(len(self.node_matrix[0])):
+                if self.node_matrix[i][j].value == -1:
+                    line.append(0)
+                else:
+                    line.append(self.node_matrix[i][j].value)
 
-            if self.node_matrix[i][x] != node:
-                if self.node_matrix[i][x].value == val:
-                    return False
+            arr.append(line)
 
-            if self.node_matrix[y][i] != node:
-                if self.node_matrix[y][i].value == val:
-                    return False
+        if self.king:
+            if not king_constraint(arr, x, y, val):
+                return False
 
-        if x < 3:
-            sx_start = 0
-            sx_end = 3
-        elif x < 6:
-            sx_start = 3
-            sx_end = 6
-        else:
-            sx_start = 6
-            sx_end = 9
+        if self.knight:
+            if not knight_constraint(arr, x, y, val):
+                return False
 
-        if y < 3:
-            sy_start = 0
-            sy_end = 3
-        elif y < 6:
-            sy_start = 3
-            sy_end = 6
-        else:
-            sy_start = 6
-            sy_end = 9
-
-        for i in range(sy_start, sy_end):
-            for j in range(sx_start, sx_end):
-                if self.node_matrix[i][j] != node:
-                    if self.node_matrix[i][j].value == val:
-                        return False
-
-
-        if x > 0:
-            pass
-
-        if x > 1:
-            pass
-
-        if x < 8:
-            pass
-
-        if x < 7:
-            pass
-
-        if y > 0:
-            pass
-
-        if y > 1:
-            pass
-
+        if not constraint_pass_inv(arr, x, y, val):
+            return False
 
         return True
 

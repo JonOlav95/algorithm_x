@@ -10,8 +10,6 @@ class NodeMatrix:
         self._size = len(sudoku_raw)
         self._matrix = matrix
 
-
-
     ''' Current implementation of the matrix creates all the nodes then connects them
         A better solution could be to simultaneously create and connect the nodes'''
     # TODO: This function requires rework as its complexity is too high
