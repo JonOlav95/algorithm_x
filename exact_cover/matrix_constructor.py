@@ -6,7 +6,6 @@ import xlsxwriter
 
 
 def construct_sudoku(size):
-    king = True
 
     down_left = []
     down_right = []
@@ -24,15 +23,10 @@ def construct_sudoku(size):
             down_left.append([2, i + 1])
             down_left.append([5, i + 1])
 
-
-
-    king_len = (len(down_left) * size) + (len(down_right) * size)
     total_rows = size * size * size
 
-    if king:
-        total_columns = size * size * 4 + king_len
-    else:
-        total_columns = size * size * 4
+
+    total_columns = size * size * 4
 
     total_nodes = size * size
 
@@ -93,29 +87,6 @@ def construct_sudoku(size):
 
                 matrix[q][w] = 1
 
-    # KING CONSTRAINT
-    if king:
-        col_tmp = size * size * 4
-
-        for i in range(size - 1):
-            for j in range(size - 1):
-
-                if [i, j] in down_right:
-                    for k in range(size):
-                        row = k + (j * size) + (i * size * size)
-
-                        matrix[row][col_tmp + k] = 1
-                        matrix[row + (size * size) + size][col_tmp + k] = 1
-                    col_tmp += size
-
-                if [i, j] in down_left:
-                    for k in range(size):
-                        row = k + (j * size) + (i * size * size)
-
-                        matrix[row][col_tmp + k] = 1
-                        matrix[row + (size * size) - size][col_tmp + k] = 1
-                    col_tmp += size
-
     #save_matrix(matrix)
 
     return matrix
@@ -129,7 +100,7 @@ def save_matrix(m):
             if m[i][j] == 0:
                 m[i][j] = ""
 
-    workbook = xlsxwriter.Workbook("arrays.xls")
+    workbook = xlsxwriter.Workbook("../arrays.xls")
     worksheet = workbook.add_worksheet()
 
     row = 0
@@ -141,7 +112,7 @@ def save_matrix(m):
 
 
 def read_xls():
-    workbook = xlrd.open_workbook('arrays.xls')
+    workbook = xlrd.open_workbook('../arrays.xls')
     # worksheet = workbook.sheet_by_name("Sheet1")
     worksheet = workbook.sheet_by_index(0)
 

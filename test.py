@@ -1,6 +1,7 @@
 
 
-arr = [[1, 2], [3, 4], [5, 6]]
+arr_1 = [2, 3, 4, 5]
+arr_2 = [3, 4]
 
-for a, b in arr:
-    print("x")
+arr_2.remove(arr_1)
+print("x")

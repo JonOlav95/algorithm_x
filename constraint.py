@@ -1,31 +1,22 @@
 import numpy as np
 
 
-def constraint_pass(arr):
-
-    for i in range(9):
-        for j in range(9):
-            cell = arr[i][j]
-
-            if cell == 0:
-                continue
-
-            for k in range(j + 1, 9):
-                row_cell = arr[i][k]
-
-                if row_cell == cell:
-                    return False
-
-            for k in range(i + 1, 9):
-                column_cell = arr[k][j]
-
-                if column_cell == cell:
-                    return False
-
-    return True
-
-
 def knight_constraint(arr, x, y, val):
+    """Checks for the knight constraint on a Sudoku board.
+
+    The knight constraint checks if a given cell has any surrounding cell of same values.
+    The surrounding cells in this scenario is a knight-step away referring to chess.
+
+    Args:
+        arr: The Sudoku board as a two-dimensional list of integers.
+        x: The x-position of the cell.
+        y: The y-position of the cell.
+        val: The value which will be tested at the given position.
+
+    Returns:
+        True if the value does not break the knight constraint on the given position in the board.
+        False otherwise.
+    """
 
     if x != 0:
         if y > 1:
@@ -66,9 +57,25 @@ def knight_constraint(arr, x, y, val):
 
 
 def king_constraint(arr, x, y, val):
+    """Checks for the king constraint on a Sudoku board.
 
+    The king constraint checks if any surrounding cells of a given cell has the same value.
+
+    Args:
+        arr: The Sudoku board as a two-dimensional list of integers.
+        x: The x-position of the cell.
+        y: The y-position of the cell.
+        val: The value which will be tested at the given position.
+
+    Returns:
+        True if the value does not break the king constraint on the given position in the board.
+        False otherwise.
+    """
+
+    # Pad 0-values around the matrix to avoid checking if the cell is on the edge of the board.
     pad_arr = np.pad(arr, [(1, 1), (1, 1)], mode="constant", constant_values=0)
 
+    # To compensate for the padding.
     x += 1
     y += 1
 
@@ -89,7 +96,20 @@ def king_constraint(arr, x, y, val):
 
 
 def constraint_pass_inv(arr, x, y, val):
+    """Checks the common constraints on a Sudoku board.
 
+    Checks if a given value fits on the row, column, and block of the board.
+
+    Args:
+        arr: The Sudoku board as a two-dimensional list of integers.
+        x: The x-position of the cell.
+        y: The y-position of the cell.
+        val: The value which will be tested at the given position.
+
+    Returns:
+        True if the value at the given position does not break any constraints.
+        False otherwise.
+    """
     for i in range(9):
         if i != x:
             row_cell = arr[y][i]
@@ -101,6 +121,7 @@ def constraint_pass_inv(arr, x, y, val):
             if column_cell == val:
                 return False
 
+    # Finds the correct block arithmetically.
     i = int(x / 3)
     j = int(y / 3)
 
@@ -113,6 +134,16 @@ def constraint_pass_inv(arr, x, y, val):
 
 
 def check_board(arr, king, knight):
+    """Checks the entire board if any constraints are broken.
+
+    Args:
+        arr: The Sudoku board as a two-dimensional list of integers.
+        king: If the king constraint is enabled.
+        knight: If the knight constraint is enabled.
+
+    Returns:
+        True if any constraint is broken, false otherwise.
+    """
     for i in range(9):
         for j in range(9):
 
