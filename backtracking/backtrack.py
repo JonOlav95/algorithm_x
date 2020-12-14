@@ -1,5 +1,6 @@
-from backtracking.backtrack_helpers import arr_to_node, node_to_arr
+from backtracking.backtrack_helpers import node_to_arr
 from constraint import *
+from backtracking.cps_main import CSP
 
 
 class Backtrack:
@@ -14,9 +15,14 @@ class Backtrack:
     """
     def __init__(self, board):
 
-        self._node_matrix = arr_to_node(board)
+        self.board = board
+        self._node_matrix = None
         self.knight = False
         self.king = False
+
+    def _cps(self):
+        cps = CSP(self.board, self.king, self.knight)
+        self._node_matrix = cps.solve()
 
     def solve(self):
         """The function which initiates the algorithm.
@@ -28,6 +34,8 @@ class Backtrack:
             If the backtracking gets stuck which means there is no solution,
             an empty list is returned instead.
         """
+        self._cps()
+
         y = 0
         x = 0
 
@@ -36,15 +44,15 @@ class Backtrack:
 
                 node = self._node_matrix[y][x]
 
-                if node.initial:
+                if node.is_initial():
                     x, y = self._step_forward(x, y)
                     continue
 
                 if node.value == -1:
-                    x, y = self._backtrack(x, y, 9)
+                    x, y = self._backtrack(x, y, node.index)
 
                 else:
-                    x, y = self._backtrack(x, y, node.value - 1)
+                    x, y = self._backtrack(x, y, node.index - 1)
 
                 # This indicates that the algorithm failed to find a solution.
                 if y < 0:
@@ -92,12 +100,12 @@ class Backtrack:
         else:
             x -= 1
 
-        if self._node_matrix[y][x].initial:
+        if self._node_matrix[y][x].is_initial():
             return self._step_back(x, y)
 
         return x, y
 
-    def _backtrack(self, x, y, val):
+    def _backtrack(self, x, y, index):
         """The core of the backtracking algorithm.
 
         Recursively decrement the value of a node until a fitting value is placed.
@@ -113,20 +121,24 @@ class Backtrack:
              If the algorithm falls outside the bounds of the matrix, -1 and -1 is returned.
              This is to indicate that the algorithm failed to find a solution.
         """
-        if val == 0:
-            self._node_matrix[y][x].value = -1
+        if index == -1:
+            self._node_matrix[y][x].reset_node()
             x, y = self._step_back(x, y)
 
+            # No solution found
             if y < 0:
                 return -1, -1
 
-            return self._backtrack(x, y, self._node_matrix[y][x].value - 1)
+            return self._backtrack(x, y, self._node_matrix[y][x].index - 1)
+
+        self._node_matrix[y][x].index = index
+        val = self._node_matrix[y][x].values[index]
 
         if self._check_constraints(x, y, val):
             self._node_matrix[y][x].value = val
             return x, y
 
-        return self._backtrack(x, y, val - 1)
+        return self._backtrack(x, y, self._node_matrix[y][x].index - 1)
 
     def _check_constraints(self, x, y, val):
         """Checks if a value fits the position.

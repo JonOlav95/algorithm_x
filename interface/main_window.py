@@ -80,7 +80,6 @@ class MainWindow(SudokuGUI):
             event: The event happening in the window,will only be used
             for certain keyboard input.
         """
-
         if event.key() == Qt.Key_1:
             self._sudoku_key(1)
 

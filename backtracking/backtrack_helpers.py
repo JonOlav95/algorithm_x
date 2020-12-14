@@ -1,44 +1,23 @@
-
-class Node:
-    """A node used to represent one cell in the Sudoku board.
-
-    Attributes:
-        value: The current value the node holds in the Sudoku game.
-        x: The horizontal position of the node.
-        y: The vertical position of the node.
-        initial: Whether or not the node is a part of the initial solution. If the node is an initial node
-        the value will not be changed.
-    """
-    def __init__(self):
-        self.value = -1
-        self.x = -1
-        self.y = -1
-        self.initial = False
+from backtracking.backtrack_node import Node
 
 
-def arr_to_node(board):
-    """Creates a matrix of Nodes from a matrix of integers.
+def arr_to_node(arr):
 
-    The matrix of Nodes is used in the backtracking algorithm to solve the board.
+    node_arr = [[Node() for i in range(len(arr))] for j in range(len(arr[0]))]
 
-    Args:
-        board: A matrix of integers which represents the Sudoku board.
+    for i in range(9):
+        for j in range(9):
 
-    Returns:
-        matrix: A matrix of nodes which represents the Sudoku board.
-    """
-    matrix = [[Node() for i in range(len(board))] for j in range(len(board[0]))]
+            node = Node()
+            node.x = j
+            node.y = i
 
-    for i in range(len(board)):
-        for j in range(len(board[0])):
-            matrix[i][j].x = i
-            matrix[i][j].y = j
+            if arr[i][j] != 0:
+                node.set_value(arr[i][j])
 
-            if board[i][j] != 0:
-                matrix[i][j].value = board[i][j]
-                matrix[i][j].initial = True
+            node_arr[i][j] = node
 
-    return matrix
+    return node_arr
 
 
 def node_to_arr(node_matrix):

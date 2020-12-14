@@ -3,16 +3,13 @@ import numpy as np
 
 def knight_constraint(arr, x, y, val):
     """Checks for the knight constraint on a Sudoku board.
-
     The knight constraint checks if a given cell has any surrounding cell of same values.
     The surrounding cells in this scenario is a knight-step away referring to chess.
-
     Args:
         arr: The Sudoku board as a two-dimensional list of integers.
         x: The x-position of the cell.
         y: The y-position of the cell.
         val: The value which will be tested at the given position.
-
     Returns:
         True if the value does not break the knight constraint on the given position in the board.
         False otherwise.
@@ -58,15 +55,12 @@ def knight_constraint(arr, x, y, val):
 
 def king_constraint(arr, x, y, val):
     """Checks for the king constraint on a Sudoku board.
-
     The king constraint checks if any surrounding cells of a given cell has the same value.
-
     Args:
         arr: The Sudoku board as a two-dimensional list of integers.
         x: The x-position of the cell.
         y: The y-position of the cell.
         val: The value which will be tested at the given position.
-
     Returns:
         True if the value does not break the king constraint on the given position in the board.
         False otherwise.
@@ -97,15 +91,12 @@ def king_constraint(arr, x, y, val):
 
 def constraint_pass_inv(arr, x, y, val):
     """Checks the common constraints on a Sudoku board.
-
     Checks if a given value fits on the row, column, and block of the board.
-
     Args:
         arr: The Sudoku board as a two-dimensional list of integers.
         x: The x-position of the cell.
         y: The y-position of the cell.
         val: The value which will be tested at the given position.
-
     Returns:
         True if the value at the given position does not break any constraints.
         False otherwise.
@@ -142,7 +133,7 @@ def check_board(arr, king, knight):
         knight: If the knight constraint is enabled.
 
     Returns:
-        True if any constraint is broken, false otherwise.
+        True if no constraint is broken broken, false otherwise.
     """
     for i in range(9):
         for j in range(9):

@@ -19,27 +19,26 @@ def check_method(cells, king_check, knight_check, check_text):
     king = king_check.isChecked()
     knight = knight_check.isChecked()
 
-    mistake = check_board(arr, king, knight)
+    correct = check_board(arr, king, knight)
 
     for line in arr:
         if 0 in line:
 
-            if mistake:
+            if not correct:
                 check_text.setText("Missing values and puzzle contains constraint mistakes.")
             else:
                 check_text.setText("Missing values.")
             return
 
-    if mistake:
+    if not correct:
         check_text.setText("Not correct.")
         return
 
-    check_text.setText("Correct")
+    check_text.setText("Correct.")
 
 
 def generate_method(cells, states, king_check, knight_check):
     """Picks an example board which fits the constraint criteria.
-
 
     Args:
         cells: Matrix of QPushButtons which represents the Sudoku board.

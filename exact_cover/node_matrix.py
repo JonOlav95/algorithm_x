@@ -1,4 +1,4 @@
-from exact_cover.node import *
+from exact_cover.ec_node import *
 
 
 class NodeMatrix:
