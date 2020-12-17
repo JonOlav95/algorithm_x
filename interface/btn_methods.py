@@ -3,7 +3,7 @@ from boards.pick_board import pick_board
 from constraint import check_board
 from interface.helpers import btn_to_arr
 from interface.sudoku_state import store_state
-from exact_cover.sudoku_solver import SudokuSolver
+from exact_cover.algorithmx import AlgorithmX
 
 
 def check_method(cells, king_check, knight_check, check_text):
@@ -78,7 +78,7 @@ def clear_method(cells, states):
             cell.setText("")
 
 
-def solve_method(cells, king_check, knight_check, check_text, states):
+def solve_method(cells, king_check, knight_check, check_text, states, algorithm_x):
     """Solve the given Sudoku Board.
 
     Args:
@@ -87,6 +87,7 @@ def solve_method(cells, king_check, knight_check, check_text, states):
         knight_check: Boolean which represents if the knight constraint is on.
         check_text: QTextEdit used to display information to the user.
         states: A list of the object SudokuState.
+        algorithm_x: AlgorithmX object used to solve regular sudoku.
     """
     arr = btn_to_arr(cells)
     king = king_check.isChecked()
@@ -94,13 +95,13 @@ def solve_method(cells, king_check, knight_check, check_text, states):
 
     states.append(store_state(arr))
 
+    # If the board breaks constraints
     if not check_board(arr, king, knight):
         check_text.setText("Invalid Board")
         return
 
     if not king and not knight:
-        algorithm_x = SudokuSolver(arr)
-        solved = algorithm_x.solve()
+        solved = algorithm_x.solve(arr)
     else:
         backtrack = Backtrack(arr)
         backtrack.king = king

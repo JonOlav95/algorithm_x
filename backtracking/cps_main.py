@@ -86,15 +86,21 @@ class CSP:
             self._naked_twins(node)
 
         # Check for reduction within the king domain if king constraint is enabled.
-        if self.king:
+        if self.king and len(node.values) == 1:
             self._king_reduce(node)
 
         # Check for reduction within the knight domain if knight constraint is enabled.
-        if self.knight:
+        if self.knight and len(node.values) == 1:
             self._knight_reduce(node)
 
     def _reduce(self, node, val, ign=None):
+        """The standard reduction function for columns, rows, and squares.
 
+        Args:
+            node: The node which will reduce the values of the nodes within the same domains.
+            val: The value which will be reduced.
+            ign: The nodes that may be ignored when iterating through the node array.
+        """
         if ign is None:
             ign = []
 
@@ -123,10 +129,16 @@ class CSP:
                         self.node_arr[n][k].remove_value(v)
 
     def _king_reduce(self, node):
+        """Reduce the potential values of nodes according to the king constraint.
 
-        if len(node.values) != 1:
-            return
+        The function arithmetically iterates through the neighbours and reduce their value.
+        The function has to constantly take into account that the node may be at the edge of
+        the board. Therefore, this functions contains a lot of if-statements to make sure
+        only nodes within bounds are alternated.
 
+        Args:
+            node: The node which may reduce the potential value of its neighbours.
+        """
         x = node.x
         y = node.y
         val = node.values[0]
@@ -156,10 +168,13 @@ class CSP:
             self.node_arr[y + 1][x].remove_value(val)
 
     def _knight_reduce(self, node):
+        """Reduce the potential values of nodes according to the knight constraint.
 
-        if len(node.values) != 1:
-            return
+        This function is extremely similar to the _king_reduce function.
 
+        Args:
+            node: The node which will decrease the values of surrounding nodes.
+        """
         x = node.x
         y = node.y
         val = node.values[0]
@@ -194,7 +209,15 @@ class CSP:
 
 
     def _naked_twins(self, node):
+        """The naked twins function.
 
+        The function checks all the standard Sudoku domains to see if there are any other
+        nodes with the same two values. If there are then a proper function is applied
+        with the two nodes as argument.
+
+        Args:
+            node: The node which will be checked for naked twins.
+        """
         x = node.x
         y = node.y
 
@@ -218,7 +241,11 @@ class CSP:
                         self._nt_box(node, self.node_arr[n][k])
 
     def _nt_row(self, node_1, node_2,):
+        """Two nodes in the same row have the two same values.
 
+        The other nodes in the same row will have their values reduced by the
+        two values the twin nodes holds.
+        """
         row = node_1.y
         values = node_1.values
 
@@ -233,7 +260,11 @@ class CSP:
                 self.node_arr[row][i].remove_value(val)
 
     def _nt_column(self, node_1, node_2):
+        """Two nodes in the same column have the two same values.
 
+        The other nodes in the same column will have their values reduced by the
+        two values the twin nodes holds.
+        """
         column = node_1.x
         values = node_1.values
 
@@ -248,6 +279,11 @@ class CSP:
                 self.node_arr[i][column].remove_value(val)
 
     def _nt_box(self, node_1, node_2):
+        """Two nodes in the same square have the two same values.
+
+        The other nodes in the same square will have their values reduced by the
+        two values the twin nodes holds.
+        """
         x = node_1.x
         y = node_2.y
         values = node_1.values

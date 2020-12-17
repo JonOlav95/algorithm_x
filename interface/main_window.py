@@ -17,6 +17,7 @@ class MainWindow(SudokuGUI):
         _target_x: The current x-position of the targeted cell (integer).
         _target_y: The current y-position of the targeted cell (integer).
         _target_cell: The current cell being targeted (QPushButton).
+        _algorithm_x: Used to solve regular Sudoku.
     """
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
@@ -25,6 +26,7 @@ class MainWindow(SudokuGUI):
         self._target_x = 0
         self._target_y = 0
         self._target_cell = None
+        self._algorithm_x = AlgorithmX()
 
         self._btn_connect()
 
@@ -36,7 +38,7 @@ class MainWindow(SudokuGUI):
         self.check_btn.clicked.connect(partial(check_method, self.cells, self.king_check,
                                                self.knight_check, self.check_text))
         self.solve_btn.clicked.connect(partial(solve_method, self.cells, self.king_check,
-                                               self.knight_check, self.check_text, self.states))
+                                               self.knight_check, self.check_text, self.states, self._algorithm_x))
         self.generate_btn.clicked.connect(partial(generate_method, self.cells, self.states,
                                                   self.king_check, self.knight_check))
 
